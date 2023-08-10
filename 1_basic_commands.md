@@ -1,13 +1,13 @@
 # Bash Scripting Basics
 
-Easy Learning 
+Documenting Learning 
 
 ## Display text passed as an argument
 ```
 echo hello
 ```
 
-### Output: 
+**Output**: 
 
 ```
 Hello
