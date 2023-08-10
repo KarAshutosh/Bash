@@ -4,7 +4,7 @@ Documenting Learning
 
 ## Display text passed as an argument
 ```
-echo Hello World
+$ echo Hello World
 ```
 
 **Output**: 
@@ -21,7 +21,7 @@ In bash, `#` is used for comments
 
 ### Create a file in vim called hello.txt
 ```
-vim hello.txt
+$ vim hello.txt
 ```
 
 ### Modes:
@@ -39,13 +39,13 @@ vim hello.txt
 Note: Alwaws good to add `#!/bin/bash` in the beginning of the file
 
 ```
-bash file.sh
+$ bash file.sh
 ```
 
 or
 
 ```
-./file.sh
+$ ./file.sh
 ```
 
 Note: Check permissions. Use chmod if no executable permissions. E.g. `chmod u+x file.sh`
@@ -79,13 +79,12 @@ echo What is your name?
 read SAY
 
 echo Hello $SAY 
-
 ```
 
 **Output:**
 
 ```
-./file.sh
+$ ./file.sh
 What is your name?
 Ash
 Hello Ash
@@ -107,9 +106,61 @@ echo Hello $1
 **Output:**
 
 ```
-./file.sh Ash
+$ ./file.sh Ash
 Hello Ash
 ```
+
+## Piping
+
+Recap: 
+* `>` to write to a file
+* `>>` to append to a file
+* `<` feed file as input 
+* `<<` feed multiple lines as input
+* `<<<` feed single line as input
+
+Using `<`
+
+Let hello.txt have "Hello how are you doing today" in it. E.g:
+
+`wc -w hello.txt` outputs `6 hello.txt`
+`wc -w < hello.txt` outputs `6`
+
+Using `<<`
+
+```
+$ cat << EOF
+> I will
+> write some 
+> text here
+> EOF
+I will
+write some 
+text here
+```
+
+Using `<<<` 
+
+`wc -w <<< "Hello There"` outputs `2`
+
+## Testing
+
+Note: `$?` returns exit code of last executed command. `0` means executed successfully and is true while `1` means it is false
+
+True
+```
+$ [ hello = hello ]
+$ echo $?
+0
+```
+False
+```
+$ [ 0 = 1 ]
+$ echo $?
+1
+```
+
+Note: `-eq` can be used instead of `=` if only comparing between numerical values. If `-eq` used with alphabets, there will be an error
 
 
 
