@@ -68,6 +68,29 @@ Output of `./file.sh`
 Hello World
 ```
 
+Using variables locally (useful in functions) with `local`
+```
+#!/bin/bash
+
+SAY=SayThis
+sayhi(){
+    local SAY=World
+    echo Hello $SAY 
+}
+sayhi
+echo $SAY
+
+```
+
+**Output:**
+
+```
+$ ./file.sh
+Hello World
+SayThis
+```
+
+
 ## Get inputs
 
 Saying Hello "Name" by taking an input
@@ -162,6 +185,193 @@ $ echo $?
 
 Note: `-eq` can be used instead of `=` if only comparing between numerical values. If `-eq` used with alphabets, there will be an error
 
+## If/Elif/Else
 
+Check if user is "Ash" or not
 
+```
+#!/bin/bash
+
+if [ ${1,,} = ash ]; then
+    echo "Welcome back Ash"
+elif [ ${1,,} = help ]; then
+    echo "Enter your username, are you ash?"
+else
+    echo "Who are you?"
+fi
+```
+
+**Output:**
+
+```
+$ ./file.sh ash
+Welcome back Ash
+
+$ ./file.sh help
+Enter your username, are you ash?
+
+$ ./file.sh notAsh
+Who are you?
+```
+
+Note: `{1,,}` lets us ignore case when comparing values
+
+## Case
+
+Check if user is "Ash" or not
+
+```
+#!/bin/bash
+
+case {1,,} in 
+    ash | altAsh)
+        echo "Welcome back Ash"
+        ;;
+    help) 
+        echo "Enter your username, are you ash?"
+        ;;
+    *)
+        echo "Who are you?"
+esac
+```
+
+**Output:**
+
+```
+$ ./file.sh ash
+Welcome back Ash
+
+$ ./file.sh help
+Enter your username, are you ash?
+
+$ ./file.sh notAsh
+Who are you?
+```
+
+## Arrays
+
+```
+$ THE_ARRAY=(one two three four five)
+
+$ echo THE_ARRAY
+one
+
+$ echo {THE_ARRAY[@]}
+one two three four five
+
+$ echo {THE_ARRAY[1]}
+two
+```
+
+## For loops
+
+Find length of each element in array 
+
+```
+$ THE_ARRAY=(one two three four five)
+$ for item in {THE_ARRAY[@]}; do echo -n $item | wc -c; done
+3
+3
+5
+4
+4
+```
+
+## Functions
+
+Function to show uptime
+ 
+```
+#!/bin/bash
+
+showuptime(){
+    local up=$(uptime -p | cut -c4-)
+    local since=(uptime -S)
+    cat << EOF
+------
+This machine has been up for ${up}
+It has been running since ${since}
+------
+EOF
+}
+showuptime
+```
+
+Function taking positional arguments
+
+```
+#!/bin/bash
+sayhi(){
+    echo Hello $1
+}
+sayhi Ash
+```
+
+Function taking positional arguments with exit codes 
+
+```
+#!/bin/bash
+sayhi(){
+    echo Hello $1
+    if [ ${1,,} = ash ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+sayhi Ash
+if [ $? = 1 ]; then
+    echo "You are not Ash"
+```
+
+**Output:**
+```
+$ ./file.sh
+Hello Ash
+```
+
+## AWK 
+
+Used when extracting and manipulating text data within files
+
+AWK with text file 
+
+```
+$ echo one two three > test.txt
+$ awk '{print $1}' test.txt
+one
+$ awk '{print $2}' test.txt
+two
+```
+
+Splitting in AWK with csv file using `-F`
+
+```
+$ echo "one,two,three" > test.csv
+$ awk -F, '{print $1}' test.csv
+one
+$ awk -F, '{print $2}' test.csv
+two
+```
+
+Note: `-F,` says that `,` is the split character
+
+## SED
+
+Used to process and transform text streams, which can be either input from files or data piped from other commands
+
+* `s/xyz/abc`: Says what comes after s/ ("xyz") must be substituted with the next thing ("abc")
+* `/g`: stands for globally
+
+```
+$ echo "Before you start a new project, you need to finish your old one" > test.txt
+$ sed 's/you/we/g' test.txt
+Before we start a new project, we need to finish your old one
+```
+
+Keep a backup file of the original
+```
+$ sed -i.ORIGINAL 's/you/we/g' test.txt
+```
+Here, test.txt.ORIGINAL will be the backup of the original file test.txt file
 
